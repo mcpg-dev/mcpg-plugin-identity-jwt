@@ -1,0 +1,15 @@
+schema: mcpg.dev/plugin/v1
+id: dev.mcpg.identity.jwt
+name: Generic JWT Identity Resolver
+license: Apache-2.0
+description: |
+  Resolves caller identity from non-OIDC bearer JWTs against one or more
+  configured issuers using STATIC keys (HS256 shared secret, or RS/ES/EdDSA
+  public keys / a static JWKS document). Validates the signature, exp/nbf/iss/
+  aud, and maps claims to roles/groups/scopes/attributes. No discovery, no JWKS
+  fetch, no introspection — every path is pure synchronous compute with no
+  network. Fails closed on bad config.
+class: identity_provider
+runtime: native-cdylib-v1
+protocol_version: "1.0"
+required_capabilities: []
