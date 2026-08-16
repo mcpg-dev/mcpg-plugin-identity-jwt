@@ -172,7 +172,7 @@ fn disallowed_alg_invalid() {
     }));
     let token = sign(Algorithm::HS256, &hs_key(), &base_claims(), None);
     match resolve(&p, &token) {
-        IdentityResolution::Invalid { reason } => {
+        IdentityResolution::Invalid { reason, .. } => {
             assert!(reason.contains("not allowed"), "{reason}")
         }
         other => panic!("expected Invalid, got {other:?}"),
@@ -239,7 +239,9 @@ fn missing_sub_invalid() {
     c.as_object_mut().unwrap().remove("sub");
     let token = sign(Algorithm::HS256, &hs_key(), &c, None);
     match resolve(&p, &token) {
-        IdentityResolution::Invalid { reason } => assert!(reason.contains("subject"), "{reason}"),
+        IdentityResolution::Invalid { reason, .. } => {
+            assert!(reason.contains("subject"), "{reason}")
+        }
         other => panic!("expected Invalid, got {other:?}"),
     }
 }

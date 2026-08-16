@@ -208,7 +208,7 @@ fn record_resolve_outcome(result: &IdentityResolution, elapsed: std::time::Durat
     };
     metrics::counter!("mcpg_identity_jwt_resolutions_total", "outcome" => outcome).increment(1);
     metrics::histogram!("mcpg_identity_jwt_resolve_ms").record(elapsed.as_millis() as f64);
-    if let IdentityResolution::Invalid { reason } = result {
+    if let IdentityResolution::Invalid { reason, .. } = result {
         warn!(reason = %reason, "identity.jwt: invalid token");
     }
 }
@@ -274,6 +274,7 @@ fn resolve(inner: &Inner, headers: &[(String, String)]) -> IdentityResolution {
     // issuer-binding still gate acceptance.
     let mut last = IdentityResolution::Invalid {
         reason: "no configured issuer matched the token".to_owned(),
+        response_headers: Vec::new(),
     };
     for ci in &inner.issuers {
         match verify_against_issuer(ci, &token, &inner.resolution) {
@@ -296,6 +297,7 @@ fn verify_against_issuer(
         Err(e) => {
             return IdentityResolution::Invalid {
                 reason: format!("invalid JWT header: {e}"),
+                response_headers: Vec::new(),
             };
         }
     };
@@ -306,6 +308,7 @@ fn verify_against_issuer(
                 "algorithm {:?} not allowed for issuer '{}'",
                 header.alg, ci.issuer
             ),
+            response_headers: Vec::new(),
         };
     }
 
@@ -329,6 +332,7 @@ fn verify_against_issuer(
     if candidates.is_empty() {
         return IdentityResolution::Invalid {
             reason: format!("no key found for kid {:?}", header.kid),
+            response_headers: Vec::new(),
         };
     }
 
@@ -364,6 +368,7 @@ fn verify_against_issuer(
 
     IdentityResolution::Invalid {
         reason: "token signature verification failed".to_owned(),
+        response_headers: Vec::new(),
     }
 }
 
@@ -378,6 +383,7 @@ fn map_claims(
         _ => {
             return IdentityResolution::Invalid {
                 reason: format!("missing or empty '{}' (subject) claim", m.subject_claim),
+                response_headers: Vec::new(),
             };
         }
     };
