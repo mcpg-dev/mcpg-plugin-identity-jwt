@@ -1,6 +1,6 @@
 [package]
 name = "mcpg-plugin-identity-jwt"
-version = "0.1.0-alpha.19"
+version = "0.1.0-alpha.20"
 license = "Apache-2.0"
 edition = "2024"
 description = "Generic static-key JWT identity_provider plugin for MCPG (dev.mcpg.identity.jwt) — verifies non-OIDC bearer JWTs against operator-supplied static keys (HS/RS/ES/EdDSA / static JWKS); no discovery, no network."
@@ -9,8 +9,8 @@ description = "Generic static-key JWT identity_provider plugin for MCPG (dev.mcp
 crate-type = ["cdylib", "rlib"]
 
 [dependencies]
-mcpg-plugin-protocol = { git = "https://github.com/mcpg-dev/mcpg-plugin-protocol", tag = "v0.1.0-beta.16", version = "=0.1.0-beta.16" }
-mcpg-plugin-sdk = { git = "https://github.com/mcpg-dev/mcpg-plugin-sdk", tag = "v0.1.0-beta.16", version = "=0.1.0-beta.16", features = ["static-firstparty"] }
+mcpg-plugin-protocol = { git = "https://github.com/mcpg-dev/mcpg-plugin-protocol", tag = "v0.1.0-beta.17", version = "=0.1.0-beta.17" }
+mcpg-plugin-sdk = { git = "https://github.com/mcpg-dev/mcpg-plugin-sdk", tag = "v0.1.0-beta.17", version = "=0.1.0-beta.17", features = ["static-firstparty"] }
 # Pure-Rust JWT on aws-lc-rs (rustls-clean crypto backend, NO openssl); use_pem
 # enables from_rsa_pem/from_ec_pem/from_ed_pem. EXACT pin from identity/workload
 # — adds no new lock entry.
